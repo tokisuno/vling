@@ -1,20 +1,22 @@
 local M = {}
+M._stack = {}
 local deadkeys_mappings = require("vling.deadkeys").mappings
 local ipa_mappings = require("vling.ipa").mappings
 
 M.deadkeys = {
   state = false,
-  -- Toggle the deadkey mappings with stackmap
   toggle = function ()
     if M.deadkeys.state == false then
       print("Deadkeys: ON")
       M.push("deadkeys", deadkeys_mappings)
+      M.deadkeys.state = true
       return
     end
 
     if M.deadkeys.state == true then
       print("Deadkeys: OFF")
       M.pop("deadkeys")
+      M.deadkeys.state = false
       return
     end
   end
@@ -22,12 +24,18 @@ M.deadkeys = {
 
 M.ipa = {
   state = false,
-  -- Toggle the ipa mappings with stackmap
   toggle = function ()
     if M.ipa.state == false then
+      print("IPA: ON")
+      M.push("ipa", ipa_mappings)
+      M.ipa.state = true
+      return
     end
 
     if M.ipa.state == true then
+      print("IPA: OFF")
+      M.pop("ipa")
+      M.ipa.state = false
     end
   end
 }
@@ -39,8 +47,6 @@ local find_mapping = function(maps, lhs)
     end
   end
 end
-
-M._stack = {}
 
 M.push = function (name, mappings)
   local maps = vim.api.nvim_get_keymap('ia')
@@ -79,8 +85,6 @@ M.pop = function (name)
   end
 end
 
-M._clear = function ()
-  M._stack = {}
-end
+M._clear = function () M._stack = {} end
 
 return M
