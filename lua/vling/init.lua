@@ -6,6 +6,11 @@ local ipa_mappings = require("vling.ipa").mappings
 M.deadkeys = {
   state = false,
   toggle = function ()
+    if M.ipa.state == true then
+      print("ERR: Cannot enable Deadkeys and IPA at the same time!")
+      return
+    end
+
     if M.deadkeys.state == false then
       print("Deadkeys: ON")
       M.push("deadkeys", deadkeys_mappings)
@@ -25,6 +30,11 @@ M.deadkeys = {
 M.ipa = {
   state = false,
   toggle = function ()
+    if M.deadkeys.state == true then
+      print("ERR: Cannot enable IPA and Deadkeys at the same time!")
+      return
+    end
+
     if M.ipa.state == false then
       print("IPA: ON")
       M.push("ipa", ipa_mappings)
@@ -49,7 +59,7 @@ local find_mapping = function(maps, lhs)
 end
 
 M.push = function (name, mappings)
-  local maps = vim.api.nvim_get_keymap('ia')
+  local maps = vim.api.nvim_get_keymap('i')
 
   local existing_maps = {}
   for lhs, rhs in pairs(mappings) do
@@ -60,27 +70,31 @@ M.push = function (name, mappings)
   end
 
   for lhs, rhs in pairs(mappings) do
-    vim.keymap.set('ia', lhs, rhs, { desc = rhs })
+    local opts = {
+      desc = 'Input ['..rhs..']',
+      silent = false,
+    }
+    vim.keymap.set('i', lhs, rhs, opts)
   end
 
   M._stack[name] = M._stack[name] or {}
 
-  M._stack[name]['ia'] = {
+  M._stack[name]['i'] = {
     existing = existing_maps,
     mappings = mappings,
   }
 end
 
 M.pop = function (name)
-  local state = M._stack[name]['ia']
-  M._stack[name]['ia'] = nil
+  local state = M._stack[name]['i']
+  M._stack[name]['i'] = nil
 
   for lhs, rhs in pairs(state.mappings) do
     if state.existing[lhs] then
       local og_mapping = state.existing[lhs]
-      vim.keymap.set('ia', lhs, og_mapping.rhs)
+      vim.keymap.set('i', lhs, og_mapping.rhs)
     else
-      vim.keymap.del('ia', lhs)
+      vim.keymap.del('i', lhs)
     end
   end
 end
