@@ -1,0 +1,10 @@
+================================================================================
+                                                                        *vling*
+This is a plugin geared towards Humanities students, specifically those
+pursuing Linguistics/Cogsci degrees, and are also nerds using Neovim.
+
+This plugin comes configured with a large table of both Deadkeys and IPA
+symbols that are commonly used. I've also included other symbols for more
+uncommonly used sounds as well.
+
+ vim:tw=78:ts=8:ft=help:norl:
