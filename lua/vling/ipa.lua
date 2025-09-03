@@ -1,7 +1,5 @@
 -- Toggles IPA bindings
-local M = {}
-
-M.mappings = {
+local M = {
   [",nn"] = "ɲ̊",
   [",gn"] = "ɲ",
   [",ng"] = "ŋ",

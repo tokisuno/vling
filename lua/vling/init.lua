@@ -1,7 +1,7 @@
 local M = {}
 M._stack = {}
-local deadkeys_mappings = require("vling.deadkeys").mappings
-local ipa_mappings = require("vling.ipa").mappings
+local deadkeys_mappings = require("vling.deadkeys")
+local ipa_mappings = require("vling.ipa")
 
 M.deadkeys = {
   state = false,
